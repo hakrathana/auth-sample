@@ -29,8 +29,8 @@ const LoginScreen = () => {
     formState: { errors },
   } = useForm<LoginFormValues>({
     defaultValues: {
-      email: "dummy@gmail.com",
-      password: "Pwd@#124!",
+      email: "",
+      password: "",
       countryCode: "855",
       phone: "",
     },
@@ -67,42 +67,35 @@ const LoginScreen = () => {
     mutationFn: loginRequest,
     onSuccess: async (data) => {
       const token = extractToken(data);
-
       if (!token) {
-        console.log("Login response:", data);
-        Alert.alert("Login failed", "API response does not include an access token.");
+        Alert.alert("Login failed", "No Access Token found in the response. Please try again.");
         return;
       }
-
       await login(token);
     },
     onError: (error: any) => {
-      console.error("Login failed:", error?.response?.data ?? error);
       const message =
         error?.response?.data?.message ??
-        error?.message ??
         "Unable to login. Please try again.";
-
       Alert.alert("Login failed", message);
     },
   });
 
   const handleLogin = (data: LoginFormValues) => {
-    console.log("loginMethod",loginMethod);
-    console.log("Data",data);
+    console.log("Login data:", data);
     if (loginMethod === "phone") {
       loginMutation.mutate({
-        countryCode: data.countryCode.trim(),
-        phone: data.phone.trim(),
+        countryCode: data.countryCode,
+        phone: data.phone,
         password: data.password,
       });
       return;
-    }
-
-    loginMutation.mutate({
-      email: data.email.trim(),
+    } else {
+      loginMutation.mutate({
+      email: data.email,
       password: data.password,
     });
+    }
   };
 
   const submitting = loginMutation.isPending;
@@ -124,8 +117,18 @@ const LoginScreen = () => {
           value={loginMethod}
           onValueChange={(nextValue) => setLoginMethod(nextValue as LoginMethod)}
           buttons={[
-            { value: "email", label: "Email" },
-            { value: "phone", label: "Phone" },
+            { value: "email", label: "Email" , style: {
+              backgroundColor:
+                loginMethod === 'email'
+                  ? 'rgba(0, 137, 250, 0.1)'
+                  : theme.colors.background,
+            },},
+            { value: "phone", label: "Phone", style: {
+              backgroundColor:
+                loginMethod === 'phone'
+                  ? 'rgba(0, 137, 250, 0.1)'
+                  : theme.colors.background,
+            }, },
           ]}
         />
       </View>
@@ -136,7 +139,6 @@ const LoginScreen = () => {
         ) : (
           <LoginByEmail control={control} errors={errors} disabled={submitting} />
         )}
-
         
       </View>
       <View style={{marginTop:10, display:'flex', alignItems:'center'}}>

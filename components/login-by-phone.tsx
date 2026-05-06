@@ -17,8 +17,7 @@ const LoginByPhone = ({ control, errors, disabled = false }: LoginByPhoneProps) 
   return (
     <View style={{ gap: 10 }}>
       <View>
-        <PhoneNumberInput />
-        {errors.phone ? <Text style={styles.errorText}>{String(errors.phone.message)}</Text> : null}
+        <PhoneNumberInput control={control} errors={errors} disabled={disabled} />
       </View>
       <View>
         <Controller

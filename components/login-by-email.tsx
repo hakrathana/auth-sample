@@ -19,13 +19,19 @@ const LoginByEmail = ({ control, errors, disabled = false }: LoginByPhoneProps) 
           control={control}
           name="email"
           rules={{
-            validate: (fieldValue) => {
-              if (!fieldValue.trim()) {
-                return "Email is required.";
-              }
-              return /^\S+@\S+\.\S+$/.test(fieldValue) || "Enter a valid email address.";
-            },
-          }}
+          validate: (value) => {
+            const trimmed = value.trim();
+
+            if (!trimmed) {
+              return 'Email is required.';
+            }
+
+            return (
+              /^\S+@\S+\.\S+$/.test(trimmed) ||
+              'Enter a valid email address.'
+            );
+          },
+        }}
           render={({ field: { onBlur, onChange, value } }) => (
             <TextInput
               placeholder="Email"
