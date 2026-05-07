@@ -17,7 +17,7 @@ const LoginByPhone = ({ control, errors, disabled = false }: LoginByPhoneProps) 
   return (
     <View style={{ gap: 10 }}>
       <View>
-        <PhoneNumberInput control={control} errors={errors} disabled={disabled} />
+        <PhoneNumberInput control={control} disabled={disabled} />
       </View>
       <View>
         <Controller

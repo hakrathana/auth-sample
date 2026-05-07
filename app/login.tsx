@@ -1,13 +1,12 @@
-import LoginByEmail from "@/components/login-by-email";
-import LoginByPhone from "@/components/login-by-phone";
+import PhoneNumberInput from "@/components/ui/phone-number-input";
 import { AuthToken, useAuth } from "@/context/AuthContext";
 import { loginRequest } from "@/services/request";
 import { useTheme } from "@react-navigation/native";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { Alert, StyleSheet, Text, View } from "react-native";
-import { Button, SegmentedButtons } from "react-native-paper";
+import { Button, SegmentedButtons, TextInput } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 type LoginMethod = "email" | "phone";
@@ -23,39 +22,38 @@ const LoginScreen = () => {
   const theme = useTheme();
   const { login } = useAuth();
   const [loginMethod, setLoginMethod] = useState<LoginMethod>("email");
+  const [hidePassword, setHidePassword] = useState(true);
+
   const {
     control,
+    clearErrors,
     handleSubmit,
-    formState: { errors },
+    reset,
   } = useForm<LoginFormValues>({
-    defaultValues: {
+    defaultValues: 
+      {
       email: "",
       password: "",
       countryCode: "855",
       phone: "",
-    },
+      },
+    shouldUnregister: true,
   });
 
   const extractToken = (response: any): AuthToken | null => {
     const tokenSources = [response, response?.data, response?.result];
 
     for (const source of tokenSources) {
-      if (!source) {
-        continue;
-      }
+      if (!source) continue;
 
-      if (typeof source.accessToken === "string") {
-        return {
-          accessToken: source.accessToken,
-          refreshToken: source.refreshToken,
-          ...source,
-        };
-      }
+      const accessToken = source.accessToken ?? source.access_token;
+      const refreshToken = source.refreshToken ?? source.refresh_token;
 
-      if (typeof source.token === "string") {
+      if (typeof accessToken === "string") {
         return {
-          accessToken: source.token,
           ...source,
+          accessToken,
+          refreshToken,
         };
       }
     }
@@ -80,22 +78,38 @@ const LoginScreen = () => {
       Alert.alert("Login failed", message);
     },
   });
-
+  
   const handleLogin = (data: LoginFormValues) => {
-    console.log("Login data:", data);
-    if (loginMethod === "phone") {
-      loginMutation.mutate({
-        countryCode: data.countryCode,
-        phone: data.phone,
-        password: data.password,
-      });
+    const payload =
+      loginMethod === "phone"
+        ? {
+            countryCode: data.countryCode,
+            phone: data.phone.trim(),
+            password: data.password,
+          }
+        : {
+            email: data.email.trim(),
+            password: data.password,
+          };
+    loginMutation.mutate(payload);
+  };
+
+  const handleLoginMethodChange = (nextValue: string) => {
+    const nextMethod = nextValue as LoginMethod;
+
+    if (nextMethod === loginMethod) {
       return;
-    } else {
-      loginMutation.mutate({
-      email: data.email,
-      password: data.password,
-    });
     }
+
+    setLoginMethod(nextMethod);
+    reset({
+      email: "",
+      password: "",
+      countryCode: "855",
+      phone: "",
+    });
+    clearErrors();
+    loginMutation.reset();
   };
 
   const submitting = loginMutation.isPending;
@@ -115,7 +129,7 @@ const LoginScreen = () => {
       <View style={styles.segmentedRow}>
         <SegmentedButtons
           value={loginMethod}
-          onValueChange={(nextValue) => setLoginMethod(nextValue as LoginMethod)}
+          onValueChange={handleLoginMethodChange}
           buttons={[
             { value: "email", label: "Email" , style: {
               backgroundColor:
@@ -134,12 +148,82 @@ const LoginScreen = () => {
       </View>
 
       <View style={styles.form}>
-        {loginMethod === "phone" ? (
-          <LoginByPhone control={control} errors={errors} disabled={submitting} />
-        ) : (
-          <LoginByEmail control={control} errors={errors} disabled={submitting} />
-        )}
-        
+        {loginMethod === 'phone' && <PhoneNumberInput control={control} disabled={submitting} />}
+        {loginMethod === 'email'&&
+          <View>
+            <Controller
+              control={control}
+              name="email"
+              rules={{
+              validate: (value) => {
+                const trimmed = value.trim();
+
+                if (!trimmed) {
+                  return 'Email is required.';
+                }
+
+                return (
+                  /^\S+@\S+\.\S+$/.test(trimmed) ||
+                  'Enter a valid email address.'
+                );
+              },
+            }}
+              render={({ field: { onBlur, onChange, value },fieldState }) => (
+                <>
+                <TextInput
+                  placeholder="Email"
+                  mode="outlined"
+                  left={<TextInput.Icon icon="email" />}
+                  value={value}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  disabled={submitting}
+                  error={!!fieldState.error}
+                  outlineStyle={styles.borderRadius}
+                />
+                {fieldState.error ? (
+                  <Text style={styles.errorText}>{fieldState.error.message}</Text>
+                ) : null}
+                </>
+              )}
+            />
+          </View>}
+        <View>
+          <Controller
+            control={control}
+            name="password"
+            rules={{
+              required: "Password is required.",
+            }}
+            render={({ field: { onBlur, onChange, value }, fieldState }) => (
+              <>
+              <TextInput
+                placeholder="Password"
+                mode="outlined"
+                value={value}
+                onBlur={onBlur}
+                onChangeText={onChange}
+                secureTextEntry={hidePassword}
+                disabled={submitting}
+                error={!!fieldState.error}
+                left={<TextInput.Icon icon="lock" />}
+                right={
+                  <TextInput.Icon
+                    icon={hidePassword ? "eye" : "eye-off"}
+                    onPress={() => setHidePassword((current) => !current)}
+                  />
+                }
+                outlineStyle={styles.borderRadius}
+              />
+              {fieldState.error ? (
+                <Text style={styles.errorText}>{fieldState.error.message}</Text>
+              ) : null}
+              </>
+            )}
+          />
+        </View>
       </View>
       <View style={{marginTop:10, display:'flex', alignItems:'center'}}>
         <Text style={{color:theme.colors.primary}}>Forgot your password?</Text>
@@ -157,7 +241,7 @@ const LoginScreen = () => {
           disabled={submitting}
           style={{ borderRadius: 10 }}
         >
-          <Text>Login</Text>
+          Login
         </Button>
       </View>
     </SafeAreaView>
@@ -182,6 +266,9 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: "#d32f2f",
-    marginTop: -8,
+    marginTop: 8,
   },
+  borderRadius:{
+    borderRadius: 12,
+  }
 });
