@@ -18,7 +18,6 @@ function RootNavigator(){
     colors: {
       ...DefaultTheme.colors,
       primary: 'rgba(0, 137, 250, 1)',
-      danger: 'rgba(255, 59, 48, 1)',
     },
   }
   const CutomerDarkTheme={
@@ -26,7 +25,6 @@ function RootNavigator(){
     colors: {
       ...DarkTheme.colors,
       primary: 'rgba(68, 169, 252, 1)',
-      danger: 'rgba(255, 59, 48, 1)',
     },
   }
 
