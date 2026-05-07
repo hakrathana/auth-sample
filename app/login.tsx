@@ -123,7 +123,7 @@ const LoginScreen = () => {
       }}
     >
       <View>
-        <Text style={[styles.title, { color: theme.colors.text }]}>Login</Text>
+        <Text style={[styles.title, { color: theme.colors.text }]} accessibilityLabel="Login">Login</Text>
       </View>
 
       <View style={styles.segmentedRow}>
@@ -184,7 +184,7 @@ const LoginScreen = () => {
                   outlineStyle={styles.borderRadius}
                 />
                 {fieldState.error ? (
-                  <Text style={styles.errorText}>{fieldState.error.message}</Text>
+                  <Text style={styles.errorText} accessibilityLabel={fieldState.error.message}>{fieldState.error.message}</Text>
                 ) : null}
                 </>
               )}
@@ -218,7 +218,7 @@ const LoginScreen = () => {
                 outlineStyle={styles.borderRadius}
               />
               {fieldState.error ? (
-                <Text style={styles.errorText}>{fieldState.error.message}</Text>
+                <Text style={styles.errorText} accessibilityLabel={fieldState.error.message}>{fieldState.error.message}</Text>
               ) : null}
               </>
             )}
@@ -226,7 +226,7 @@ const LoginScreen = () => {
         </View>
       </View>
       <View style={{marginTop:10, display:'flex', alignItems:'center'}}>
-        <Text style={{color:theme.colors.primary}}>Forgot your password?</Text>
+        <Text style={{color:theme.colors.primary}} accessibilityLabel="Forgot your password?">Forgot your password?</Text>
       </View>
 
       <View style={styles.buttonRow}>

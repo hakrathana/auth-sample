@@ -16,7 +16,7 @@ const HomeScreen = () => {
       }}
     >
       <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
-        <Text style={{ fontSize: 22, fontWeight: 'bold' }}>Welcome To Our Homepage</Text>
+        <Text style={{ fontSize: 22, fontWeight: 'bold' }} accessibilityLabel="Welcome To Our Homepage">Welcome To Our Homepage</Text>
         <Button mode="contained" onPress={() => router.navigate('/profile')} style={{ marginTop: 20 }} buttonColor={theme.colors.primary}>
           View Profile
         </Button>

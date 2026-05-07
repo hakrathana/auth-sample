@@ -20,20 +20,20 @@ const ProfileScreen = () => {
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background, padding: 24, gap: 12 }}>
       <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-        <Text style={{ fontWeight: 'bold' }}>Last Name</Text>
-        <Text>{profile?.data?.lastName}</Text>
+        <Text style={{ fontWeight: 'bold' }} accessibilityLabel="Last Name">Last Name</Text>
+        <Text accessibilityLabel={profile?.data?.lastName}>{profile?.data?.lastName}</Text>
       </View>
       <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-        <Text style={{ fontWeight: 'bold' }}>First Name</Text>
-        <Text>{profile?.data?.firstName}</Text>
+        <Text style={{ fontWeight: 'bold' }} accessibilityLabel="First Name">First Name</Text>
+        <Text accessibilityLabel={profile?.data?.firstName}>{profile?.data?.firstName}</Text>
       </View>
       <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-        <Text style={{ fontWeight: 'bold' }}>Email</Text>
-        <Text>{profile?.data?.email}</Text>
+        <Text style={{ fontWeight: 'bold' }} accessibilityLabel="Email">Email</Text>
+        <Text accessibilityLabel={profile?.data?.email}>{profile?.data?.email}</Text>
       </View>
       <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-        <Text style={{ fontWeight: 'bold' }}>Gender</Text>
-        <Text>{profile?.data?.gender}</Text>
+        <Text style={{ fontWeight: 'bold' }} accessibilityLabel="Gender">Gender</Text>
+        <Text accessibilityLabel={profile?.data?.gender}>{profile?.data?.gender}</Text>
       </View>
       <View>
         <Button mode="contained" onPress={logout} style={{ marginTop: 20 }} buttonColor={theme.colors.danger}>
