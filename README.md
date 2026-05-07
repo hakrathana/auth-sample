@@ -2,7 +2,7 @@
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
-## Get started
+## Get started This Project
 
 1. Install dependencies
 
@@ -10,7 +10,9 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
    npm install
    ```
 
-2. Start the app
+2. Copy create .env file base on what .env.example and Update key
+
+3. Start the app
 
    ```bash
    npx expo start

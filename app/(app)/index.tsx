@@ -4,7 +4,6 @@ import { View } from "react-native";
 import { Button, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-
 const HomeScreen = () => {
   const router = useRouter();
   const theme = useTheme();

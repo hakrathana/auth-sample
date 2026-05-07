@@ -8,7 +8,6 @@ import { PaperProvider } from 'react-native-paper';
 import 'react-native-reanimated';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-
 function RootNavigator(){
   const { token, isLoading } = useAuth();
   const colorScheme = useColorScheme();

@@ -20,6 +20,7 @@ const PhoneNumberInput = ({ control, disabled = false }: PhoneNumberInputProps) 
   const theme = useTheme();
   const [selectedCountry, setSelectedCountry] = useState<CountryCode | undefined>();
   const [openCountryPicker, setOpenCountryPicker] = useState(false);
+  const [focused, setFocused] = useState(false);
 
   return (
     <Controller
@@ -38,9 +39,13 @@ const PhoneNumberInput = ({ control, disabled = false }: PhoneNumberInputProps) 
             style={[
               styles.phoneBox,
               {
-                borderColor: fieldState.error ? theme.colors.error : theme.colors.outline,
+                borderColor: fieldState.error
+                  ? theme.colors.error
+                  : focused
+                    ? theme.colors.primary
+                    : theme.colors.outline,
                 backgroundColor: theme.colors.background,
-                borderWidth: fieldState.error ? 2 : 1,
+                borderWidth: fieldState.error || focused ? 2 : 1,
               },
             ]}
           >
@@ -90,7 +95,11 @@ const PhoneNumberInput = ({ control, disabled = false }: PhoneNumberInputProps) 
 
             <TextInput
               value={value}
-              onBlur={onBlur}
+              onBlur={() => {
+                setFocused(false);
+                onBlur();
+              }}
+              onFocus={() => setFocused(true)}
               onChangeText={(nextValue) => onPhoneChange(normalizePhoneNumber(nextValue))}
               keyboardType="phone-pad"
               placeholder="XXX XXX XXX XXX"

@@ -2,8 +2,8 @@ import { AuthToken } from '@/context/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL ?? 'https://dev.tovtrip.com/usersvc/api/v1';
-const API_KEY = process.env.EXPO_PUBLIC_API_KEY ?? '037cb34d-c5ee-4169-b2fd-bec049f77ecf';
+const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL;
+const API_KEY = process.env.EXPO_PUBLIC_API_KEY;
 
 const axiosInstance = axios.create({
   baseURL: API_BASE_URL,
